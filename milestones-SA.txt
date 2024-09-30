@@ -11,3 +11,4 @@ Rubric
  In addition to that I spent (3+ hours debugging and researching the pygame library, but will switch to unity if its easier) so far this project is very fun as I get to develop a tool that I will actively use
  at my weekly DND sessions, this motivates me to get it done sooner rather than later.
 
+repo found here: https://github.com/NotASniper/updatedCombatSim
