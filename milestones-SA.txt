@@ -1,0 +1,12 @@
+Rubric
+ +10: Organized Code, readable and CONSISTENT formatting
+ +10: UI is easy to follow
+ +20: Program is able to track turns and actions of all entities, and calculate the correct damage based on the reactions specified in the readME
+    +5 Enemys can have elements applied onto them, debuffs can expire after x rounds, and they take the correct amount of damage based on buffs or debuffs
+    +5 Player turns apply elements, deal damage, and can activate resonances
+    +5 Ultimate moves work, and still trigger reactions
+    +5 Game ends when all enemies or players are dead
+ I, Semilore Abiodun-Adeniyi, undertook this as a solo project, as a continuation of my 202 project. I wanted to implement UI and fix a lot of bugs the first iteration had,
+ and so in this repo there is so far an updated Enemy class (2 hours), which should do better about handling stuff like DoT's and reactions.
+ In addition to that I spent (3+ hours debugging and researching the pygame library, but will switch to unity if its easier) 
+
