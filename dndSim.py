@@ -18,16 +18,16 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-# Fonts
+# Font for pygame 
 font = pygame.font.SysFont(None, 24)
 large_font = pygame.font.SysFont(None, 32)
 
-# Elements and reactions
+# Elements
 elements = ["Pyro", "Cryo", "Hydro", "Electro", "Dendro", "Geo", "Anemo"]
 
-# Reactions list with elements_to_remove specified
+# Reactions list (element to remove after)
 reactions = [
-    # Triple-element reactions (more specific reactions first)
+    # Triple-element reactions
     (frozenset(["Anemo", "Hydro", "Electro"]), ("Thunderstorm", 1.0, "Strikes all targets with lightning, dealing 40% of caster's max HP.", ['ALL'], "Electro")),
     (frozenset(["Dendro", "Hydro", "Cryo"]), ("Toxic Spores", 1.0, "3 Spores will emerge; after 3 turns, target takes 5% of Max HP as damage.", ['ALL'], None)),
     # Double-element reactions
@@ -55,17 +55,16 @@ reactions = [
     (frozenset(["Electro", "Dendro"]), ("Corrosion", 1.0, "Applies DoT equal to 5% max HP for 2 turns.", ['ALL'], None)),
     (frozenset(["Anemo", "Geo"]), ("Sandstorm", 1.0, "Targets roll at disadvantage for 1 turn. Removes ALL applied elements.", ['ALL'], None)),
     (frozenset(["Cryo", "Dendro"]), ("Frostbite", 1.0, "Applies DoT equal to 3% max HP for 3 turns and reduces movement speed by 50%.", ['ALL'], None)),
-    # Add more reactions as needed
 ]
 
-# Enemy entity
+# mobs
 class Enemy:
     def __init__(self, name, max_hp, defense=0, elements_applied=[], is_frozen=False, is_petrified=False):
         self.name = name
         self.max_hp = max_hp
         self.current_hp = max_hp
         self.elements = elements_applied.copy()  # Elements directly applied
-        self.swirled_elements = []  # Elements applied via Swirl
+        self.swirled_elements = []  # swirled ele
         self.defense = defense
         self.damage_log = []
         self.debuffs = {}  # Debuffs with their remaining durations or details
@@ -82,7 +81,6 @@ class Enemy:
             return f"{self.name} already has {element} applied."
 
     def calculate_damage(self, base_damage, multiplier=1.0, attack_element=None):
-        # Apply defense reduction from debuffs
         defense = self.defense
         if "Superconduct" in self.debuffs:
             defense *= 0.5
@@ -108,7 +106,7 @@ class Enemy:
         return f"{self.name} is affected by {debuff_name} for {duration} turn(s)."
 
     def update_debuffs(self):
-        # Update debuffs durations
+        # tick
         to_remove = []
         messages = []
         for debuff in list(self.debuffs.keys()):
@@ -130,9 +128,9 @@ class Enemy:
             messages.append(f"{debuff} on {self.name} has ended.")
             del self.debuffs[debuff]
         return messages
-
+    # combine ticks?
     def update_shield(self):
-        # Update shield duration
+        #tick
         messages = []
         if self.shield:
             self.shield['duration'] -= 1
@@ -148,7 +146,7 @@ class Enemy:
         return f"{dot_name} will deal {dot_damage:.2f} damage per turn for {duration} turns."
 
     def process_dot(self):
-        # Apply DoT effects
+        # tick
         total_dot_damage = 0
         messages = []
         for debuff in list(self.debuffs.keys()):
