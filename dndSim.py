@@ -263,7 +263,7 @@ class TextInput:
         pygame.draw.rect(surface, self.color, self.rect, 2)
 
 # Functions
-def perform_base_attack():
+def baseAttack():
     message = "Performing a base attack..."
     log_messages.append(message)
     base_damage = float(base_damage_input.text) if base_damage_input.text else 0
@@ -278,9 +278,9 @@ def perform_base_attack():
     # Process end-of-turn effects
     turn_messages = enemy.process_turn()
     log_messages.extend(turn_messages)
-    check_enemy_defeat()
+    checkDead()
 
-def calculate_elemental_reaction():
+def checkReact():
     reaction_effects = None
     # Collect elements separately
     applied_elements = set(enemy.elements)
@@ -402,21 +402,21 @@ def calculate_elemental_reaction():
     # Process end-of-turn effects
     turn_messages = enemy.process_turn()
     log_messages.extend(turn_messages)
-    check_enemy_defeat()
+    checkDead()
 
 def add_element(element):
     if enemy.is_frozen or enemy.is_petrified:
         log_messages.append(f"{enemy.name} is unable to act due to being {'Frozen' if enemy.is_frozen else 'Petrified'}.")
-        # Even if the enemy can't act, we should still process end-of-turn effects
+        # Even if the enemy can't act process end-of-turn effects
         turn_messages = enemy.process_turn()
         log_messages.extend(turn_messages)
-        check_enemy_defeat()
+        checkDead()
     else:
         message = enemy.apply_element(element)
         log_messages.append(message)
-        calculate_elemental_reaction()
+        checkReact()
 
-def check_enemy_defeat():
+def checkDead():
     if enemy.current_hp <= 0:
         log_messages.append(f"{enemy.name} is defeated!")
         disable_buttons()
@@ -425,7 +425,6 @@ def disable_buttons():
     for button in buttons:
         button.callback = lambda: None
 
-# Drawing functions
 def draw_enemy_status(surface, enemy):
     y_offset = 100
     # Display enemy name and HP
@@ -468,8 +467,7 @@ def draw_enemy_status(surface, enemy):
         status_text = font.render(f"Status: {', '.join(status_effects)}", True, BLACK)
         surface.blit(status_text, (300, y_offset + 190))
 
-def display_logs(surface, logs):
-    # Display the last few log messages
+def displayLog(surface, logs):
     max_logs = 5
     start_y = 500
     for i, message in enumerate(logs[-max_logs:]):
@@ -480,7 +478,7 @@ def display_logs(surface, logs):
 buttons = []
 button_width, button_height = 100, 40
 
-# Create element buttons
+# Create element  (Pyro Cryo, etc)
 for i, elem in enumerate(elements):
     x = 10
     y = 10 + i * (button_height + 5)
@@ -488,11 +486,11 @@ for i, elem in enumerate(elements):
     buttons.append(btn)
 
 # Base Attack Button
-base_attack_btn = Button(10, 10 + len(elements) * (button_height + 5), button_width, button_height, "Base Attack", perform_base_attack)
+base_attack_btn = Button(10, 10 + len(elements) * (button_height + 5), button_width, button_height, "Base Attack", baseAttack)
 buttons.append(base_attack_btn)
 
 # Create Text Inputs
-base_damage_input = TextInput(150, 10, 100, 32, '50')
+base_damage_input = TextInput(150, 10, 100, 32, '25')
 caster_max_hp_input = TextInput(150, 52, 100, 32, '100')
 
 # Labels for Text Inputs
@@ -500,7 +498,7 @@ base_damage_label = font.render("Base Damage:", True, BLACK)
 caster_max_hp_label = font.render("Caster Max HP:", True, BLACK)
 
 # Initialize Enemy and Logs
-enemy = Enemy("Frostbeast", 500, defense=0)
+enemy = Enemy("Frostbeast", 500, defense=20)
 log_messages = []
 
 # Main Game Loop
@@ -523,22 +521,19 @@ while running:
             for button in buttons:
                 if button.is_clicked(pos):
                     button.callback()
-
-    # Draw UI components
     for button in buttons:
         button.draw(window)
 
-    # Draw Text Inputs and Labels
     window.blit(base_damage_label, (260, 18))
     base_damage_input.draw(window)
     window.blit(caster_max_hp_label, (260, 60))
     caster_max_hp_input.draw(window)
 
-    # Update and draw enemy status
+
     draw_enemy_status(window, enemy)
 
     # Display log messages
-    display_logs(window, log_messages)
+    displayLog(window, log_messages)
 
     # Update display
     pygame.display.flip()
